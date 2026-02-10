@@ -177,7 +177,9 @@ async def analyze_text(request: AnalyzeTextRequest) -> AnalyzeTextResponse:
 
 @router.post("/pipeline/run", response_model=SentimentPipelineStatus)
 async def run_sentiment_pipeline(
-    background_tasks: BackgroundTasks, use_finbert: bool = True, days_back: int = 30
+    background_tasks: BackgroundTasks,
+    use_finbert: bool = True,
+    days_back: int = Query(default=30, ge=1, le=365, description="Days to analyze"),
 ) -> SentimentPipelineStatus:
     """
     Run the sentiment analysis pipeline.
