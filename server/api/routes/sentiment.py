@@ -57,7 +57,40 @@ _sentiment_pipeline_state = {"running": False, "last_stats": None}
 # =============================================================================
 
 
-@router.get("/{symbol}", response_model=SentimentListResponse)
+@router.get(
+    "/{symbol}",
+    response_model=SentimentListResponse,
+    summary="Get daily sentiment history",
+    description="Retrieve aggregated daily sentiment scores and headline counts for an asset.",
+    responses={
+        200: {
+            "description": "Sentiment history retrieved successfully",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "symbol": "AAPL",
+                        "count": 2,
+                        "data": [
+                            {
+                                "date": "2023-11-14",
+                                "avg_sentiment": 0.45,
+                                "headline_count": 12,
+                                "top_headline": "Apple releases new iPhone",
+                            },
+                            {
+                                "date": "2023-11-15",
+                                "avg_sentiment": -0.12,
+                                "headline_count": 8,
+                                "top_headline": "Supply chain issues affect Apple",
+                            },
+                        ],
+                    }
+                }
+            },
+        },
+        404: {"description": "Asset not found"},
+    },
+)
 async def get_sentiment(
     symbol: str,
     db: DBSession,
@@ -65,16 +98,6 @@ async def get_sentiment(
 ) -> SentimentListResponse:
     """
     Get daily sentiment data for an asset.
-
-    Args:
-        symbol: Trading symbol (e.g., 'AAPL')
-        days: Number of days of historical data (default: 30)
-
-    Returns:
-        Sentiment data with average scores and headline counts.
-
-    Raises:
-        404: Asset not found.
     """
     # Sanitize symbol
     symbol = validate_symbol(symbol)

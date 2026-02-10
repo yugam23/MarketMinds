@@ -54,14 +54,38 @@ from fastapi import Request
 from server.core.limiter import limiter, RATE_LIMIT_PREDICT
 
 
-@router.get("/{symbol}", response_model=PredictionResponse)
+@router.get(
+    "/{symbol}",
+    response_model=PredictionResponse,
+    summary="Get price prediction",
+    description="Generate next-day price prediction using LSTM model augmented with sentiment analysis.",
+    responses={
+        200: {
+            "description": "Successful prediction",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "symbol": "AAPL",
+                        "current_price": 173.25,
+                        "predicted_price": 175.50,
+                        "direction": "up",
+                        "change_percent": 1.30,
+                        "sentiment_contribution": 0.15,
+                        "prediction_date": "2023-11-15",
+                        "model_version": "lstm_v1",
+                    }
+                }
+            },
+        },
+        404: {"description": "Asset not found or no price data"},
+        400: {"description": "Model not trained or invalid symbol"},
+        429: {"description": "Rate limit exceeded (10/minute)"},
+    },
+)
 @limiter.limit(RATE_LIMIT_PREDICT)
 async def predict_price(
     request: Request, symbol: str, db: DBSession
 ) -> PredictionResponse:
-    """
-    Generate next-day price prediction using LSTM model.
-    """
     symbol = validate_symbol(symbol)
     service = PredictionService(db)
 

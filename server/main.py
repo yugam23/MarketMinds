@@ -144,7 +144,50 @@ app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 app.add_middleware(SlowAPIMiddleware)
 
-# 6. CORS (should be near the end to allow other middleware to process first)
+# 6. Global Exception Handlers
+from starlette.exceptions import HTTPException as StarletteHTTPException
+from fastapi.responses import JSONResponse
+from datetime import datetime
+
+
+@app.exception_handler(StarletteHTTPException)
+async def http_exception_handler(request: Request, exc: StarletteHTTPException):
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={
+            "error": {
+                "status": exc.status_code,
+                "message": exc.detail,
+                "timestamp": datetime.utcnow().isoformat(),
+                "path": request.url.path,
+            }
+        },
+    )
+
+
+@app.exception_handler(Exception)
+async def general_exception_handler(request: Request, exc: Exception):
+    # In production, hide internal server errors
+    message = "Internal Server Error"
+    if settings.debug:
+        message = str(exc)
+
+    logger.error(f"Unhandled exception: {exc}", exc_info=True)
+
+    return JSONResponse(
+        status_code=500,
+        content={
+            "error": {
+                "status": 500,
+                "message": message,
+                "timestamp": datetime.utcnow().isoformat(),
+                "path": request.url.path,
+            }
+        },
+    )
+
+
+# 7. CORS (should be near the end to allow other middleware to process first)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origins,

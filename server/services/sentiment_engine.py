@@ -263,6 +263,7 @@ class DailySentimentService:
     ) -> list[DailySentiment]:
         """
         Process sentiment for a range of dates.
+        Optimized to use bulk fetching and batch updates.
 
         Args:
             db: Database session
@@ -271,12 +272,10 @@ class DailySentimentService:
             end_date: End of range (inclusive)
 
         Returns:
-            List of created DailySentiment records
+            List of created/updated DailySentiment records
         """
         from itertools import groupby
         from operator import attrgetter
-
-        records = []
 
         # 1. Bulk fetch all relevant headlines in one query
         headlines = (
@@ -291,10 +290,30 @@ class DailySentimentService:
             .all()
         )
 
-        # 2. Group by date in memory
+        if not headlines:
+            return []
+
+        # 2. Bulk fetch existing DailySentiment records for this range
+        existing_records = (
+            db.query(DailySentiment)
+            .filter(
+                DailySentiment.symbol == symbol,
+                DailySentiment.date >= start_date,
+                DailySentiment.date <= end_date,
+            )
+            .all()
+        )
+
+        # Map date -> record
+        existing_map = {r.date: r for r in existing_records}
+
+        # 3. Group by date in memory
         headlines_by_date = groupby(headlines, key=attrgetter("date"))
 
-        # 3. Process groups
+        processed_records = []
+        new_records = []
+
+        # 4. Process groups
         for date_key, group in headlines_by_date:
             group_list = list(group)
 
@@ -306,17 +325,36 @@ class DailySentimentService:
             top_idx = np.argmax(abs_scores)
             top_headline = group_list[top_idx].title
 
-            data = {
-                "avg_sentiment": round(np.mean(scores), 4),
-                "headline_count": len(scores),
-                "top_headline": top_headline,
-            }
+            # Calculate stats
+            avg_sentiment = Decimal(str(round(np.mean(scores), 4)))
+            headline_count = len(scores)
 
-            # Store using existing logic
-            record = self.store_daily_sentiment(db, symbol, date_key, data)
-            records.append(record)
+            if date_key in existing_map:
+                # Update existing
+                record = existing_map[date_key]
+                record.avg_sentiment = avg_sentiment
+                record.headline_count = headline_count
+                record.top_headline = top_headline
+                processed_records.append(record)
+            else:
+                # Create new
+                record = DailySentiment(
+                    symbol=symbol,
+                    date=date_key,
+                    avg_sentiment=avg_sentiment,
+                    headline_count=headline_count,
+                    top_headline=top_headline,
+                )
+                new_records.append(record)
+                processed_records.append(record)
 
-        return records
+        # 5. Batch Add & Commit
+        if new_records:
+            db.add_all(new_records)
+
+        db.commit()
+
+        return processed_records
 
 
 # =============================================================================
