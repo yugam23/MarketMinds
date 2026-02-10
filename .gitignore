@@ -152,3 +152,4 @@ docs/
 .pytest_cache/
 design-system/
 .env
+codebase_analysis.md
