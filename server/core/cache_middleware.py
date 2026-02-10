@@ -14,10 +14,21 @@ CACHEABLE_ROUTES = {
 }
 
 # Route patterns that should be cached (dynamic routes)
+# Route patterns that should be cached (dynamic routes)
 CACHEABLE_PATTERNS = {
-    "/api/prices/": 60,  # 1 minute - price data changes frequently
-    "/api/sentiment/": 300,  # 5 minutes - sentiment aggregated
-    "/api/headlines/": 180,  # 3 minutes - news updates periodically
+    "/api/prices/": {
+        "max_age": 60,
+        "stale_while_revalidate": 60,
+    },  # 1 minute, allow stale for 1 min
+    "/api/sentiment/": {
+        "max_age": 300,
+        "stale_while_revalidate": 600,
+    },  # 5 min, allow stale for 10 min
+    "/api/headlines/": {
+        "max_age": 180,
+        "stale_while_revalidate": 300,
+    },  # 3 min, allow stale for 5 min
+    "/api/predict/": {"max_age": 0, "private": True},  # No caching for predictions
 }
 
 # Routes that should never be cached
@@ -73,11 +84,29 @@ class CacheMiddleware(BaseHTTPMiddleware):
             return response
 
         # Check pattern matches for dynamic routes
-        for pattern, max_age in CACHEABLE_PATTERNS.items():
+        for pattern, config in CACHEABLE_PATTERNS.items():
+            # config can be int (old simple way) or dict (smart way)
             if path.startswith(pattern):
-                response.headers["Cache-Control"] = (
-                    f"public, max-age={max_age}, stale-while-revalidate=60"
-                )
+                if isinstance(config, int):
+                    response.headers["Cache-Control"] = (
+                        f"public, max-age={config}, stale-while-revalidate=60"
+                    )
+                elif isinstance(config, dict):
+                    directives = []
+                    if config.get("private"):
+                        directives.append("private")
+                    else:
+                        directives.append("public")
+
+                    if "max_age" in config:
+                        directives.append(f"max_age={config['max_age']}")
+
+                    if "stale_while_revalidate" in config:
+                        directives.append(
+                            f"stale-while-revalidate={config['stale_while_revalidate']}"
+                        )
+
+                    response.headers["Cache-Control"] = ", ".join(directives)
                 return response
 
         # Default: no caching

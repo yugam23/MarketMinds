@@ -47,6 +47,22 @@ from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
 from server.core.limiter import limiter
+import uuid
+from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
+from starlette.requests import Request
+from starlette.responses import Response
+
+
+class RequestIDMiddleware(BaseHTTPMiddleware):
+    async def dispatch(
+        self, request: Request, call_next: RequestResponseEndpoint
+    ) -> Response:
+        request_id = request.headers.get("X-Request-ID", str(uuid.uuid4()))
+        request.state.request_id = request_id
+        response = await call_next(request)
+        response.headers["X-Request-ID"] = request_id
+        return response
+
 
 # Import model prewarming
 from server.core.model_prewarm import prewarm_all_models
@@ -108,7 +124,10 @@ app = FastAPI(
 # === Middleware Stack ===
 # Order matters: last added = first executed
 
-# 1. Instrument Prometheus (should be first to capture all requests)
+# 1. Request ID (should be absolutely first)
+app.add_middleware(RequestIDMiddleware)
+
+# 2. Instrument Prometheus (should be second to capture all requests with ID)
 Instrumentator().instrument(app).expose(app)
 
 # 2. GZip Compression (compress responses > 500 bytes)
@@ -135,7 +154,7 @@ app.add_middleware(
 )
 
 # === Include Routers ===
-app.include_router(health.router, tags=["Health"])
+app.include_router(health.router, prefix="/api", tags=["Health"])
 app.include_router(assets.router, prefix="/api")
 app.include_router(prices.router, prefix="/api")
 app.include_router(sentiment.router, prefix="/api")
