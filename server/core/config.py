@@ -4,6 +4,7 @@ Environment-based settings using Pydantic Settings.
 """
 
 from functools import lru_cache
+from typing import Any
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -19,7 +20,8 @@ class Settings(BaseSettings):
     # Application
     app_name: str = "MarketMinds"
     app_version: str = "1.0.0"
-    debug: bool = True
+    debug: bool = False  # Default to False for security
+    environment: str = "development"  # development, staging, production
 
     # Database
     database_url: str = "sqlite:///./marketminds.db"
@@ -31,7 +33,13 @@ class Settings(BaseSettings):
     redis_url: str = ""
 
     # CORS
-    cors_origins: list[str] = ["http://localhost:3000", "http://localhost:5173"]
+    # In production, this must be set via env var as comma-separated list
+    cors_origins_str: str = "http://localhost:3000,http://localhost:5173"
+
+    @property
+    def cors_origins(self) -> list[str]:
+        """Parse CORS origins from string."""
+        return [origin.strip() for origin in self.cors_origins_str.split(",") if origin.strip()]
 
     # ML Settings
     model_dir: str = "./models"
@@ -45,14 +53,27 @@ class Settings(BaseSettings):
     currency_code: str = "INR"
 
     # Security
-    SECRET_KEY: str = "your-secret-key-please-change-in-production"
+    # Default is ONLY for dev. usage. Production MUST set this env var.
+    SECRET_KEY: str = "dev-secret-key-change-me"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     REFRESH_TOKEN_EXPIRE_DAYS: int = 7
 
     # Monitoring
     SENTRY_DSN: str = ""  # Optional: Set to enable Sentry error tracking
-    ENVIRONMENT: str = "development"  # development, staging, production
 
+    def model_post_init(self, __context: Any) -> None:
+        """Validate settings after initialization."""
+        if self.environment.lower() == "production":
+            # Enforce secure secret key in production
+            if self.SECRET_KEY == "dev-secret-key-change-me":
+                raise ValueError(
+                    "CRITICAL: SECRET_KEY must be set to a secure value in production environment!"
+                )
+            
+            # Warn if debug is on in production
+            if self.debug:
+                 import logging
+                 logging.warning("SECURITY WARNING: Debug mode is enabled in production!")
 
 @lru_cache
 def get_settings() -> Settings:
