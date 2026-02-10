@@ -32,7 +32,10 @@ interface PriceChartProps {
   error?: string | null;
 }
 
-const CustomTooltip = ({ active, payload, label }: any) => {
+import { TooltipProps } from 'recharts';
+import { NameType, ValueType } from 'recharts/types/component/DefaultTooltipContent';
+
+const CustomTooltip = ({ active, payload, label }: TooltipProps<ValueType, NameType>) => {
   if (active && payload && payload.length) {
     return (
       <div className="bg-slate-900/95 backdrop-blur-md border border-white/10 p-3 rounded-lg shadow-xl">

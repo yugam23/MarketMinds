@@ -28,7 +28,12 @@ api.interceptors.response.use(
   (response) => response,
   (error: AxiosError<ApiError>) => {
     const message = error.response?.data?.detail || error.message || 'An error occurred';
-    console.error('API Error:', message);
+    
+    // Only log in development
+    if (import.meta.env.DEV) {
+      console.error('API Error:', message);
+    }
+    
     return Promise.reject(new Error(message));
   }
 );

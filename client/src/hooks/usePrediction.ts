@@ -27,7 +27,7 @@ export function usePrediction(): UsePredictionResult {
     try {
       const response = await getPrediction(symbol);
       setPrediction(response);
-    } catch (err: any) {
+    } catch (err: unknown) {
       if (err instanceof Error && err.message.includes('not trained')) {
         setPrediction(null);
       } else {
@@ -44,7 +44,7 @@ export function usePrediction(): UsePredictionResult {
     try {
       await trainModel(symbol);
       return true;
-    } catch (err: any) {
+    } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Training failed to start');
       return false;
     } finally {
