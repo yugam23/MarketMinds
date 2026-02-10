@@ -3,6 +3,7 @@
  * Axios-based HTTP client for backend communication.
  */
 import axios, { AxiosInstance, AxiosError } from 'axios';
+import axiosRetry from 'axios-retry';
 import type {
   Asset,
   PriceListResponse,
@@ -23,6 +24,18 @@ const api: AxiosInstance = axios.create({
   timeout: 30000,
   headers: {
     'Content-Type': 'application/json',
+  },
+});
+
+// Configure retry logic
+axiosRetry(api, {
+  retries: 3,
+  retryDelay: axiosRetry.exponentialDelay,
+  retryCondition: (error) => {
+    return (
+      axiosRetry.isNetworkOrIdempotentRequestError(error) ||
+      error.response?.status === 429
+    ); // Retry on rate limit
   },
 });
 
