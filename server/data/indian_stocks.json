@@ -25,8 +25,8 @@
     "asset_type": "stock"
   },
   {
-    "symbol": "HINDUNILVR.NS",
-    "name": "Hindustan Unilever Ltd",
+    "symbol": "BHARTIARTL.NS",
+    "name": "Bharti Airtel Ltd",
     "asset_type": "stock"
   },
   {
@@ -35,23 +35,8 @@
     "asset_type": "stock"
   },
   {
-    "symbol": "SBIN.NS",
-    "name": "State Bank of India",
-    "asset_type": "stock"
-  },
-  {
-    "symbol": "BHARTIARTL.NS",
-    "name": "Bharti Airtel Ltd",
-    "asset_type": "stock"
-  },
-  {
-    "symbol": "KOTAKBANK.NS",
-    "name": "Kotak Mahindra Bank Ltd",
-    "asset_type": "stock"
-  },
-  {
-    "symbol": "LICI.NS",
-    "name": "Life Insurance Corporation of India",
+    "symbol": "HINDUNILVR.NS",
+    "name": "Hindustan Unilever Ltd",
     "asset_type": "stock"
   },
   {
@@ -60,8 +45,13 @@
     "asset_type": "stock"
   },
   {
-    "symbol": "HCLTECH.NS",
-    "name": "HCL Technologies Ltd",
+    "symbol": "SBIN.NS",
+    "name": "State Bank of India",
+    "asset_type": "stock"
+  },
+  {
+    "symbol": "KOTAKBANK.NS",
+    "name": "Kotak Mahindra Bank Ltd",
     "asset_type": "stock"
   },
   {
@@ -70,13 +60,18 @@
     "asset_type": "stock"
   },
   {
-    "symbol": "ASIANPAINT.NS",
-    "name": "Asian Paints Ltd",
+    "symbol": "BAJFINANCE.NS",
+    "name": "Bajaj Finance Ltd",
     "asset_type": "stock"
   },
   {
     "symbol": "MARUTI.NS",
     "name": "Maruti Suzuki India Ltd",
+    "asset_type": "stock"
+  },
+  {
+    "symbol": "ASIANPAINT.NS",
+    "name": "Asian Paints Ltd",
     "asset_type": "stock"
   },
   {
@@ -90,13 +85,113 @@
     "asset_type": "stock"
   },
   {
-    "symbol": "BAJFINANCE.NS",
-    "name": "Bajaj Finance Ltd",
+    "symbol": "ULTRACEMCO.NS",
+    "name": "UltraTech Cement Ltd",
     "asset_type": "stock"
   },
   {
-    "symbol": "ULTRACEMCO.NS",
-    "name": "UltraTech Cement Ltd",
+    "symbol": "NTPC.NS",
+    "name": "NTPC Ltd",
+    "asset_type": "stock"
+  },
+  {
+    "symbol": "POWERGRID.NS",
+    "name": "Power Grid Corporation of India Ltd",
+    "asset_type": "stock"
+  },
+  {
+    "symbol": "M&M.NS",
+    "name": "Mahindra & Mahindra Ltd",
+    "asset_type": "stock"
+  },
+  {
+    "symbol": "NESTLEIND.NS",
+    "name": "Nestle India Ltd",
+    "asset_type": "stock"
+  },
+  {
+    "symbol": "TECHM.NS",
+    "name": "Tech Mahindra Ltd",
+    "asset_type": "stock"
+  },
+  {
+    "symbol": "WIPRO.NS",
+    "name": "Wipro Ltd",
+    "asset_type": "stock"
+  },
+  {
+    "symbol": "HCLTECH.NS",
+    "name": "HCL Technologies Ltd",
+    "asset_type": "stock"
+  },
+  {
+    "symbol": "ADANIENT.NS",
+    "name": "Adani Enterprises Ltd",
+    "asset_type": "stock"
+  },
+  {
+    "symbol": "ADANIPORTS.NS",
+    "name": "Adani Ports and Special Economic Zone Ltd",
+    "asset_type": "stock"
+  },
+  {
+    "symbol": "ONGC.NS",
+    "name": "Oil and Natural Gas Corporation Ltd",
+    "asset_type": "stock"
+  },
+  {
+    "symbol": "COALINDIA.NS",
+    "name": "Coal India Ltd",
+    "asset_type": "stock"
+  },
+  {
+    "symbol": "TATAMOTORS.NS",
+    "name": "Tata Motors Ltd",
+    "asset_type": "stock"
+  },
+  {
+    "symbol": "JSWSTEEL.NS",
+    "name": "JSW Steel Ltd",
+    "asset_type": "stock"
+  },
+  {
+    "symbol": "HDFCLIFE.NS",
+    "name": "HDFC Life Insurance Company Ltd",
+    "asset_type": "stock"
+  },
+  {
+    "symbol": "SBILIFE.NS",
+    "name": "SBI Life Insurance Company Ltd",
+    "asset_type": "stock"
+  },
+  {
+    "symbol": "DIVISLAB.NS",
+    "name": "Divi's Laboratories Ltd",
+    "asset_type": "stock"
+  },
+  {
+    "symbol": "DRREDDY.NS",
+    "name": "Dr Reddy's Laboratories Ltd",
+    "asset_type": "stock"
+  },
+  {
+    "symbol": "GRASIM.NS",
+    "name": "Grasim Industries Ltd",
+    "asset_type": "stock"
+  },
+  {
+    "symbol": "BPCL.NS",
+    "name": "Bharat Petroleum Corporation Ltd",
+    "asset_type": "stock"
+  },
+  {
+    "symbol": "EICHERMOT.NS",
+    "name": "Eicher Motors Ltd",
+    "asset_type": "stock"
+  },
+  {
+    "symbol": "BAJAJFINSV.NS",
+    "name": "Bajaj Finserv Ltd",
     "asset_type": "stock"
   }
 ]
