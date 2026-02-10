@@ -115,7 +115,9 @@ async def predict_price(
             predicted_price=Decimal(str(round(predicted_val, 2))),
             direction="up" if predicted_val > current_price else "down",
             change_percent=Decimal(str(round(change_pct, 2))),
-            sentiment_contribution=Decimal("0.0"),  # TODO: Calculate this impact
+            sentiment_contribution=Decimal(
+                str(round(pred_result.get("sentiment_impact", 0.0), 4))
+            ),
             prediction_date=pred_result["prediction_date"],
             model_version="lstm_v1",
         )

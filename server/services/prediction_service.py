@@ -108,10 +108,17 @@ class PredictionService:
         # inverse_transform expects 2D array
         pred_price = scaler.inverse_transform([[pred_value]])[0][0]
 
+        # 5. Extract Sentiment Impact
+        # Sentiment is the 3rd feature (index 2) in usage: [close, volume, sentiment]
+        # X_input shape is [1, lookback, 3]
+        recent_sentiment = X_input[0, :, 2]
+        sentiment_impact = float(np.mean(recent_sentiment))
+
         return {
             "symbol": symbol,
             "predicted_price": round(pred_price, 2),
             "prediction_date": date.today() + timedelta(days=1),
             "confidence_score": 0.0,  # Placeholder for confidence
-            "used_sentiment": False,  # TODO checks if sentiment was actually used
+            "sentiment_impact": sentiment_impact,
+            "used_sentiment": True,
         }

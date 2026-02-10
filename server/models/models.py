@@ -176,6 +176,10 @@ class Prediction(Base):
     """
 
     __tablename__ = "predictions"
+    __table_args__ = (
+        Index("idx_predictions_symbol_date", "symbol", "prediction_date"),
+        UniqueConstraint("symbol", "prediction_date", name="uq_prediction_symbol_date"),
+    )
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     symbol: Mapped[str] = mapped_column(String(10), ForeignKey("assets.symbol"))

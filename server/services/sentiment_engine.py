@@ -273,14 +273,48 @@ class DailySentimentService:
         Returns:
             List of created DailySentiment records
         """
-        records = []
-        current = start_date
+        from itertools import groupby
+        from operator import attrgetter
 
-        while current <= end_date:
-            record = self.compute_and_store(db, symbol, current)
-            if record:
-                records.append(record)
-            current += timedelta(days=1)
+        records = []
+
+        # 1. Bulk fetch all relevant headlines in one query
+        headlines = (
+            db.query(Headline)
+            .filter(
+                Headline.symbol == symbol,
+                Headline.date >= start_date,
+                Headline.date <= end_date,
+                Headline.sentiment_score.isnot(None),
+            )
+            .order_by(Headline.date)
+            .all()
+        )
+
+        # 2. Group by date in memory
+        headlines_by_date = groupby(headlines, key=attrgetter("date"))
+
+        # 3. Process groups
+        for date_key, group in headlines_by_date:
+            group_list = list(group)
+
+            # Extract scores
+            scores = [float(h.sentiment_score) for h in group_list]
+
+            # Find top headline
+            abs_scores = [abs(s) for s in scores]
+            top_idx = np.argmax(abs_scores)
+            top_headline = group_list[top_idx].title
+
+            data = {
+                "avg_sentiment": round(np.mean(scores), 4),
+                "headline_count": len(scores),
+                "top_headline": top_headline,
+            }
+
+            # Store using existing logic
+            record = self.store_daily_sentiment(db, symbol, date_key, data)
+            records.append(record)
 
         return records
 
