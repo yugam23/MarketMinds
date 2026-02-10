@@ -15,6 +15,7 @@ from server.schemas.schemas import PredictionRequest, PredictionResponse
 
 from server.services.prediction_service import PredictionService
 from server.core.database import SessionLocal
+from server.core.sanitization import validate_symbol
 from sqlalchemy import select
 
 router = APIRouter(tags=["Predictions"])
@@ -44,8 +45,9 @@ async def train_model(
     """
     Trigger model training for a symbol in the background.
     """
-    background_tasks.add_task(run_training_task, symbol.upper())
-    return {"status": "accepted", "message": f"Training started for {symbol.upper()}"}
+    symbol = validate_symbol(symbol)
+    background_tasks.add_task(run_training_task, symbol)
+    return {"status": "accepted", "message": f"Training started for {symbol}"}
 
 
 from fastapi import Request
@@ -60,7 +62,7 @@ async def predict_price(
     """
     Generate next-day price prediction using LSTM model.
     """
-    symbol = symbol.upper()
+    symbol = validate_symbol(symbol)
     service = PredictionService(db)
 
     # Check asset exists

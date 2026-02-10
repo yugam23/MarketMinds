@@ -12,6 +12,7 @@ from sqlalchemy import select
 from server.api.dependencies import DBSession
 from server.models.models import Asset, Headline
 from server.schemas.schemas import HeadlineResponse
+from server.core.sanitization import validate_symbol
 
 
 router = APIRouter(prefix="/headlines", tags=["Headlines"])
@@ -42,8 +43,11 @@ async def get_headlines(
     Raises:
         404: Asset not found.
     """
+    # Sanitize symbol
+    symbol = validate_symbol(symbol)
+
     # Check asset exists
-    asset = db.get(Asset, symbol.upper())
+    asset = db.get(Asset, symbol)
     if not asset:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail=f"Asset {symbol} not found"
@@ -56,7 +60,7 @@ async def get_headlines(
     # Query headlines
     result = db.execute(
         select(Headline)
-        .where(Headline.symbol == symbol.upper())
+        .where(Headline.symbol == symbol)
         # .where(Headline.date >= start_date)  <-- Removed to support "time travel" (System time 2026 vs Real Data)
         # .where(Headline.date <= end_date)
         .order_by(Headline.date.desc())

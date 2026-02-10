@@ -12,6 +12,7 @@ from sqlalchemy import select
 from server.api.dependencies import DBSession
 from server.models.models import Asset, Price
 from server.schemas.schemas import PriceResponse, PriceListResponse
+from server.core.sanitization import validate_symbol
 
 
 router = APIRouter(prefix="/prices", tags=["Prices"])
@@ -36,8 +37,11 @@ async def get_prices(
     Raises:
         404: Asset not found.
     """
+    # Sanitize symbol
+    symbol = validate_symbol(symbol)
+
     # Check asset exists
-    asset = db.get(Asset, symbol.upper())
+    asset = db.get(Asset, symbol)
     if not asset:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail=f"Asset {symbol} not found"
@@ -74,11 +78,10 @@ async def get_latest_price(symbol: str, db: DBSession) -> Price:
     Raises:
         404: No price data found.
     """
+    symbol = validate_symbol(symbol)
+
     result = db.execute(
-        select(Price)
-        .where(Price.symbol == symbol.upper())
-        .order_by(Price.date.desc())
-        .limit(1)
+        select(Price).where(Price.symbol == symbol).order_by(Price.date.desc()).limit(1)
     )
     price = result.scalar_one_or_none()
 

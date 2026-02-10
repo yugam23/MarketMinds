@@ -13,6 +13,7 @@ from sqlalchemy import select
 from server.api.dependencies import DBSession
 from server.models.models import Asset, DailySentiment
 from server.schemas.schemas import DailySentimentResponse, SentimentListResponse
+from server.core.sanitization import validate_symbol
 
 
 router = APIRouter(prefix="/sentiment", tags=["Sentiment"])
@@ -75,8 +76,11 @@ async def get_sentiment(
     Raises:
         404: Asset not found.
     """
+    # Sanitize symbol
+    symbol = validate_symbol(symbol)
+
     # Check asset exists
-    asset = db.get(Asset, symbol.upper())
+    asset = db.get(Asset, symbol)
     if not asset:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail=f"Asset {symbol} not found"
@@ -115,9 +119,11 @@ async def get_latest_sentiment(symbol: str, db: DBSession) -> DailySentiment:
     Raises:
         404: No sentiment data found.
     """
+    symbol = validate_symbol(symbol)
+
     result = db.execute(
         select(DailySentiment)
-        .where(DailySentiment.symbol == symbol.upper())
+        .where(DailySentiment.symbol == symbol)
         .order_by(DailySentiment.date.desc())
         .limit(1)
     )
@@ -263,8 +269,11 @@ async def score_headlines_for_symbol(
     Returns:
         Status message
     """
+    # Sanitize symbol
+    symbol = validate_symbol(symbol)
+
     # Verify asset exists
-    asset = db.get(Asset, symbol.upper())
+    asset = db.get(Asset, symbol)
     if not asset:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail=f"Asset {symbol} not found"
