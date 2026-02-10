@@ -1,0 +1,3 @@
+"""
+MarketMinds API Routes
+"""

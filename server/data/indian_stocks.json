@@ -1,0 +1,102 @@
+[
+  {
+    "symbol": "RELIANCE.NS",
+    "name": "Reliance Industries Ltd",
+    "asset_type": "stock"
+  },
+  {
+    "symbol": "TCS.NS",
+    "name": "Tata Consultancy Services Ltd",
+    "asset_type": "stock"
+  },
+  {
+    "symbol": "HDFCBANK.NS",
+    "name": "HDFC Bank Ltd",
+    "asset_type": "stock"
+  },
+  {
+    "symbol": "ICICIBANK.NS",
+    "name": "ICICI Bank Ltd",
+    "asset_type": "stock"
+  },
+  {
+    "symbol": "INFY.NS",
+    "name": "Infosys Ltd",
+    "asset_type": "stock"
+  },
+  {
+    "symbol": "HINDUNILVR.NS",
+    "name": "Hindustan Unilever Ltd",
+    "asset_type": "stock"
+  },
+  {
+    "symbol": "ITC.NS",
+    "name": "ITC Ltd",
+    "asset_type": "stock"
+  },
+  {
+    "symbol": "SBIN.NS",
+    "name": "State Bank of India",
+    "asset_type": "stock"
+  },
+  {
+    "symbol": "BHARTIARTL.NS",
+    "name": "Bharti Airtel Ltd",
+    "asset_type": "stock"
+  },
+  {
+    "symbol": "KOTAKBANK.NS",
+    "name": "Kotak Mahindra Bank Ltd",
+    "asset_type": "stock"
+  },
+  {
+    "symbol": "LICI.NS",
+    "name": "Life Insurance Corporation of India",
+    "asset_type": "stock"
+  },
+  {
+    "symbol": "LT.NS",
+    "name": "Larsen & Toubro Ltd",
+    "asset_type": "stock"
+  },
+  {
+    "symbol": "HCLTECH.NS",
+    "name": "HCL Technologies Ltd",
+    "asset_type": "stock"
+  },
+  {
+    "symbol": "AXISBANK.NS",
+    "name": "Axis Bank Ltd",
+    "asset_type": "stock"
+  },
+  {
+    "symbol": "ASIANPAINT.NS",
+    "name": "Asian Paints Ltd",
+    "asset_type": "stock"
+  },
+  {
+    "symbol": "MARUTI.NS",
+    "name": "Maruti Suzuki India Ltd",
+    "asset_type": "stock"
+  },
+  {
+    "symbol": "SUNPHARMA.NS",
+    "name": "Sun Pharmaceutical Industries Ltd",
+    "asset_type": "stock"
+  },
+  {
+    "symbol": "TITAN.NS",
+    "name": "Titan Company Ltd",
+    "asset_type": "stock"
+  },
+  {
+    "symbol": "BAJFINANCE.NS",
+    "name": "Bajaj Finance Ltd",
+    "asset_type": "stock"
+  },
+  {
+    "symbol": "ULTRACEMCO.NS",
+    "name": "UltraTech Cement Ltd",
+    "asset_type": "stock"
+  }
+]

@@ -1,0 +1,144 @@
+/**
+ * App Component Styles
+ */
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+  flex: 1;
+  padding: var(--spacing-xl) 0;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-lg);
+}
+
+/* Hero Section */
+.hero-section {
+  text-align: center;
+  margin-bottom: var(--spacing-2xl);
+  animation: fadeIn 0.5s ease-out;
+}
+
+.hero-section h2 {
+  font-size: var(--font-size-3xl);
+  font-weight: 700;
+  margin-bottom: var(--spacing-md);
+}
+
+.hero-accent {
+  background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-purple) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-section p {
+  font-size: var(--font-size-lg);
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Dashboard Grid */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: var(--spacing-xl);
+  margin-bottom: var(--spacing-xl);
+}
+
+.chart-column {
+  min-width: 0; /* Fix for chart overflow */
+}
+
+.sidebar-column {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+/* News Section */
+.news-section {
+  margin-top: var(--spacing-xl);
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .sidebar-column {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-section h2 {
+    font-size: var(--font-size-2xl);
+  }
+  
+  .hero-section p {
+    font-size: var(--font-size-md);
+  }
+  
+  .sidebar-column {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Global Focus Styles */
+:focus-visible {
+  outline: 2px solid #135bec;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Skip Navigation Link */
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 0;
+  background: #135bec;
+  color: white;
+  padding: 8px 16px;
+  z-index: 100;
+  transition: top 0.2s;
+  font-weight: 600;
+  border-bottom-right-radius: 8px;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* Accessibility: High Contrast Utilities */
+.text-high-contrast {
+  color: #f1f5f9; /* slate-100 */
+}
+
+/* Ensure text readability on dark backgrounds */
+.text-body {
+  color: #cbd5e1; /* slate-300 */
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+

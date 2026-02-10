@@ -1,0 +1,103 @@
+# Dependabot Configuration
+# Automatically creates PRs for dependency updates
+
+version: 2
+updates:
+  # Python dependencies (server)
+  - package-ecosystem: "pip"
+    directory: "/server"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Asia/Kolkata"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "chore(deps)"
+    labels:
+      - "dependencies"
+      - "python"
+    groups:
+      security:
+        patterns:
+          - "python-jose*"
+          - "passlib*"
+          - "bleach*"
+        update-types:
+          - "minor"
+          - "patch"
+      ml:
+        patterns:
+          - "transformers*"
+          - "torch*"
+          - "tensorflow*"
+          - "scikit-learn*"
+
+  # npm dependencies (client)
+  - package-ecosystem: "npm"
+    directory: "/client"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Asia/Kolkata"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "chore(deps)"
+    labels:
+      - "dependencies"
+      - "javascript"
+    groups:
+      react:
+        patterns:
+          - "react*"
+          - "@types/react*"
+        update-types:
+          - "minor"
+          - "patch"
+      testing:
+        patterns:
+          - "vitest*"
+          - "@testing-library/*"
+          - "@playwright/*"
+      build:
+        patterns:
+          - "vite*"
+          - "@vitejs/*"
+          - "typescript*"
+
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Asia/Kolkata"
+    open-pull-requests-limit: 3
+    commit-message:
+      prefix: "chore(ci)"
+    labels:
+      - "dependencies"
+      - "ci"
+
+  # Docker
+  - package-ecosystem: "docker"
+    directory: "/server"
+    schedule:
+      interval: "monthly"
+    commit-message:
+      prefix: "chore(docker)"
+    labels:
+      - "dependencies"
+      - "docker"
+
+  - package-ecosystem: "docker"
+    directory: "/client"
+    schedule:
+      interval: "monthly"
+    commit-message:
+      prefix: "chore(docker)"
+    labels:
+      - "dependencies"
+      - "docker"

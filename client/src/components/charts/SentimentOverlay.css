@@ -1,0 +1,141 @@
+.sentiment-overlay {
+  background: var(--bg-card);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-lg);
+  box-shadow: var(--shadow-md);
+}
+
+.sentiment-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-md);
+}
+
+.sentiment-header h4 {
+  font-size: var(--font-size-md);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.sentiment-symbol {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  padding: 2px 8px;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-sm);
+}
+
+.sentiment-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.sentiment-gauge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--spacing-lg);
+  border-radius: var(--radius-md);
+}
+
+.sentiment-gauge.bullish {
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.sentiment-gauge.bearish {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.sentiment-gauge.neutral {
+  background: rgba(148, 163, 184, 0.1);
+  border: 1px solid rgba(148, 163, 184, 0.3);
+}
+
+.gauge-value {
+  font-size: var(--font-size-3xl);
+  font-weight: 700;
+}
+
+.sentiment-gauge.bullish .gauge-value {
+  color: var(--accent-green);
+}
+
+.sentiment-gauge.bearish .gauge-value {
+  color: var(--accent-red);
+}
+
+.sentiment-gauge.neutral .gauge-value {
+  color: var(--text-muted);
+}
+
+.gauge-label {
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: var(--spacing-xs);
+}
+
+.sentiment-gauge.bullish .gauge-label {
+  color: var(--accent-green);
+}
+
+.sentiment-gauge.bearish .gauge-label {
+  color: var(--accent-red);
+}
+
+.sentiment-gauge.neutral .gauge-label {
+  color: var(--text-muted);
+}
+
+.sentiment-scale {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.scale-label {
+  font-size: var(--font-size-xs);
+  white-space: nowrap;
+}
+
+.scale-label.bearish {
+  color: var(--accent-red);
+}
+
+.scale-label.bullish {
+  color: var(--accent-green);
+}
+
+.scale-bar {
+  flex: 1;
+  height: 8px;
+  background: linear-gradient(90deg, var(--accent-red), var(--text-muted), var(--accent-green));
+  border-radius: var(--radius-full);
+  position: relative;
+}
+
+.scale-indicator {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 16px;
+  height: 16px;
+  background: white;
+  border: 2px solid var(--accent-blue);
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.no-data {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+  padding: var(--spacing-lg);
+}
