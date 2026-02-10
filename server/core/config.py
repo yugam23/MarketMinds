@@ -39,7 +39,11 @@ class Settings(BaseSettings):
     @property
     def cors_origins(self) -> list[str]:
         """Parse CORS origins from string."""
-        return [origin.strip() for origin in self.cors_origins_str.split(",") if origin.strip()]
+        return [
+            origin.strip()
+            for origin in self.cors_origins_str.split(",")
+            if origin.strip()
+        ]
 
     # ML Settings
     model_dir: str = "./models"
@@ -69,11 +73,23 @@ class Settings(BaseSettings):
                 raise ValueError(
                     "CRITICAL: SECRET_KEY must be set to a secure value in production environment!"
                 )
-            
+
             # Warn if debug is on in production
             if self.debug:
-                 import logging
-                 logging.warning("SECURITY WARNING: Debug mode is enabled in production!")
+                import logging
+
+                logging.warning(
+                    "SECURITY WARNING: Debug mode is enabled in production!"
+                )
+
+            # Enforce CORS configuration in production
+            # We check if the value is still the default dev value
+            default_cors = "http://localhost:3000,http://localhost:5173"
+            if self.cors_origins_str == default_cors:
+                raise ValueError(
+                    "CRITICAL: CORS_ORIGINS must be explicitly set in production environment!"
+                )
+
 
 @lru_cache
 def get_settings() -> Settings:

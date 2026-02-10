@@ -7,7 +7,8 @@ from datetime import date, datetime
 from decimal import Decimal
 from typing import Optional, List
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, field_validator
+from server.core.sanitization import validate_symbol
 
 
 # --- Asset Schemas ---
@@ -17,6 +18,11 @@ class AssetBase(BaseModel):
     symbol: str
     name: str
     asset_type: str
+
+    @field_validator("symbol")
+    @classmethod
+    def validate_symbol_field(cls, v):
+        return validate_symbol(v)
 
 
 class AssetCreate(AssetBase):
@@ -47,6 +53,11 @@ class PriceCreate(PriceBase):
     """Schema for creating price data."""
 
     symbol: str
+
+    @field_validator("symbol")
+    @classmethod
+    def validate_symbol_field(cls, v):
+        return validate_symbol(v)
 
 
 class PriceResponse(PriceBase):
@@ -81,6 +92,11 @@ class HeadlineCreate(HeadlineBase):
 
     symbol: str
     date: date
+
+    @field_validator("symbol")
+    @classmethod
+    def validate_symbol_field(cls, v):
+        return validate_symbol(v)
 
 
 class HeadlineResponse(HeadlineBase):
@@ -126,6 +142,11 @@ class PredictionRequest(BaseModel):
 
     symbol: str
 
+    @field_validator("symbol")
+    @classmethod
+    def validate_symbol_field(cls, v):
+        return validate_symbol(v)
+
 
 class PredictionResponse(BaseModel):
     """Schema for prediction response."""
@@ -138,6 +159,18 @@ class PredictionResponse(BaseModel):
     sentiment_contribution: Decimal
     prediction_date: date
     model_version: str
+
+    @field_validator("symbol")
+    @classmethod
+    def validate_symbol_field(cls, v):
+        return validate_symbol(v)
+
+    @field_validator("predicted_price", "current_price")
+    @classmethod
+    def validate_price(cls, v):
+        if v <= 0:
+            raise ValueError("Price must be positive")
+        return v
 
 
 # --- Health Check ---

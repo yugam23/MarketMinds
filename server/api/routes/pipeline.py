@@ -6,7 +6,7 @@ Endpoints for triggering and monitoring data pipelines.
 import logging
 from typing import Literal
 
-from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Query
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
@@ -16,6 +16,7 @@ from server.pipelines.daily_ingestion import (
     seed_default_assets,
     run_daily_pipeline,
 )
+from server.core.sanitization import validate_symbol
 
 
 logger = logging.getLogger(__name__)
@@ -57,7 +58,7 @@ _pipeline_state = {"running": False, "last_stats": None}
 @router.post("/run", response_model=PipelineStatus)
 async def trigger_pipeline(
     background_tasks: BackgroundTasks,
-    days: int = 30,
+    days: int = Query(default=30, ge=1, le=365, description="Historical days to fetch"),
     db: Session = Depends(get_db),
 ) -> PipelineStatus:
     """
@@ -104,32 +105,28 @@ async def trigger_pipeline(
     )
 
 
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Query
+from server.core.sanitization import validate_symbol
+
+# ...
+
+@router.post("/run", response_model=PipelineStatus)
+async def trigger_pipeline(
+    background_tasks: BackgroundTasks,
+    days: int = Query(default=30, ge=1, le=365, description="Historical days to fetch"),
+    db: Session = Depends(get_db),
+) -> PipelineStatus:
+    # ...
+
 @router.post("/run/{symbol}", response_model=PipelineStatus)
 async def trigger_pipeline_for_symbol(
     symbol: str,
     background_tasks: BackgroundTasks,
-    days: int = 30,
+    days: int = Query(default=30, ge=1, le=365, description="Historical days to fetch"),
 ) -> PipelineStatus:
-    """
-    Trigger pipeline for a specific asset symbol.
+    # Sanitize symbol
+    symbol = validate_symbol(symbol)
 
-    Args:
-        symbol: Asset symbol (e.g., 'AAPL')
-        days: Number of historical days
-
-    Returns:
-        Pipeline status
-    """
-
-    async def run_single():
-        pipeline = DailyIngestionPipeline()
-        await pipeline.run_for_symbol(symbol.upper(), days)
-
-    background_tasks.add_task(run_single)
-
-    return PipelineStatus(
-        status="started", message=f"Pipeline started for {symbol.upper()}"
-    )
 
 
 @router.get("/status", response_model=PipelineStatus)

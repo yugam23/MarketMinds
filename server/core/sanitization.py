@@ -1,50 +1,32 @@
 """
-Input Sanitization Module
-Provides functions to validate and sanitize user inputs.
+Input sanitization utilities.
 """
+
 import re
-from fastapi import HTTPException, status
+
 
 def validate_symbol(symbol: str) -> str:
     """
     Validate and sanitize trading symbol.
-    
-    Rules:
-    - Uppercase
-    - 1-10 characters
-    - Alphanumeric, hyphen, and period only
-    
+
     Args:
         symbol: The stock/crypto symbol to validate
-        
+
     Returns:
-        Sanitized symbol string
-        
+        The sanitized, uppercase symbol
+
     Raises:
-        HTTPException(400): If symbol format is invalid
+        ValueError: If the symbol format is invalid
     """
     if not symbol:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Symbol cannot be empty"
-        )
-        
+        raise ValueError("Symbol cannot be empty")
+
     # Remove whitespace
-    clean_symbol = symbol.strip().upper()
-    
-    # Check length
-    if len(clean_symbol) > 10:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Symbol too long (max 10 chars)"
-        )
-        
-    # Check format (A-Z, 0-9, -, .)
-    # Examples: AAPL, BTC-USD, RELIANCE.NS
-    if not re.match(r'^[A-Z0-9.-]+$', clean_symbol):
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Invalid symbol format: {clean_symbol}"
-        )
-        
-    return clean_symbol
+    symbol = symbol.strip().upper()
+
+    # Only allow A-Z, 0-9, hyphen, and period
+    # Length between 1 and 14 characters to support suffixes (e.g. RELIANCE.NS)
+    if not re.match(r"^[A-Z0-9.-]{1,14}$", symbol):
+        raise ValueError(f"Invalid symbol format: {symbol}")
+
+    return symbol
