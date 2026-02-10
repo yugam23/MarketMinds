@@ -8,11 +8,14 @@ import type {
   PriceListResponse,
   SentimentListResponse,
   Headline,
+  PaginatedResponse, // Import this
   PredictionResponse,
   TrainingResponse,
   HealthResponse,
   ApiError,
 } from '@/types';
+
+
 
 // Create axios instance with defaults
 const api: AxiosInstance = axios.create({
@@ -90,10 +93,11 @@ export const getLatestSentiment = async (symbol: string): Promise<SentimentListR
 export const getHeadlines = async (
   symbol: string,
   days: number = 7,
-  limit: number = 50
-): Promise<Headline[]> => {
-  const response = await api.get<Headline[]>(`/headlines/${symbol}`, {
-    params: { days, limit },
+  limit: number = 50,
+  offset: number = 0
+): Promise<PaginatedResponse<Headline>> => {
+  const response = await api.get<PaginatedResponse<Headline>>(`/headlines/${symbol}`, {
+    params: { days, limit, offset },
   });
   return response.data;
 };

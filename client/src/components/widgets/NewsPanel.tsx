@@ -19,6 +19,7 @@ import { ErrorState } from '@/components/common/ErrorState';
 
 export function NewsPanel({ symbol }: NewsPanelProps) {
   const [headlines, setHeadlines] = useState<Headline[]>([]);
+  const [totalCount, setTotalCount] = useState<number>(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -27,8 +28,11 @@ export function NewsPanel({ symbol }: NewsPanelProps) {
       setLoading(true);
       setError(null);
       try {
-        const data = await getHeadlines(symbol);
-        setHeadlines(Array.isArray(data) ? data : []);
+        const response = await getHeadlines(symbol);
+        setHeadlines(response.data || []);
+        if (response.pagination) {
+          setTotalCount(response.pagination.total);
+        }
       } catch (err) {
         console.error("Failed to fetch news", err);
         setError("Failed to load latest news");
@@ -55,7 +59,7 @@ export function NewsPanel({ symbol }: NewsPanelProps) {
           Market Intelligence
         </h3>
         <span className="text-xs text-slate-500 bg-white/5 px-3 py-1.5 rounded-full font-medium border border-white/10">
-          {headlines.length} Sources
+          {totalCount > 0 ? totalCount : headlines.length} Sources
         </span>
       </div>
 

@@ -124,7 +124,15 @@ export function PredictionCard({
              <Skeleton className="h-4 w-32" />
            ) : prediction && !error && (
              <div className="text-xs text-slate-500 animate-in fade-in duration-700">
-                Confidence: <span className="text-[#135bec] font-medium">High</span>
+                <div>Confidence: <span className="text-[#135bec] font-medium">High</span></div>
+                {Number(prediction.sentiment_contribution) !== 0 && (
+                  <div className="mt-1 flex items-center gap-1">
+                    Sentiment Impact: 
+                    <span className={Number(prediction.sentiment_contribution) > 0 ? "text-emerald-400" : "text-red-400"}>
+                        {Number(prediction.sentiment_contribution) > 0 ? "+" : ""}{Number(prediction.sentiment_contribution).toFixed(4)}
+                    </span>
+                  </div>
+                )}
              </div>
            )}
 

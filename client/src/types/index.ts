@@ -28,6 +28,16 @@ export interface PriceListResponse {
   count: number;
 }
 
+export interface PaginatedResponse<T> {
+  data: T[];
+  pagination: {
+    total: number;
+    offset: number;
+    limit: number;
+    days: number;
+  };
+}
+
 // Candlestick Data for Charts
 export interface CandlestickData {
   time: string;
