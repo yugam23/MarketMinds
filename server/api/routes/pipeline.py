@@ -105,30 +105,6 @@ async def trigger_pipeline(
     )
 
 
-from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Query
-from server.core.sanitization import validate_symbol
-
-# ...
-
-@router.post("/run", response_model=PipelineStatus)
-async def trigger_pipeline(
-    background_tasks: BackgroundTasks,
-    days: int = Query(default=30, ge=1, le=365, description="Historical days to fetch"),
-    db: Session = Depends(get_db),
-) -> PipelineStatus:
-    # ...
-
-@router.post("/run/{symbol}", response_model=PipelineStatus)
-async def trigger_pipeline_for_symbol(
-    symbol: str,
-    background_tasks: BackgroundTasks,
-    days: int = Query(default=30, ge=1, le=365, description="Historical days to fetch"),
-) -> PipelineStatus:
-    # Sanitize symbol
-    symbol = validate_symbol(symbol)
-
-
-
 @router.get("/status", response_model=PipelineStatus)
 async def get_pipeline_status() -> PipelineStatus:
     """
