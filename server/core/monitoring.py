@@ -28,7 +28,7 @@ def setup_logging():
     ]
 
     # Environment-specific renderer
-    if settings.ENVIRONMENT == "production":
+    if settings.environment == "production":
         processors.append(structlog.processors.JSONRenderer())
     else:
         processors.append(structlog.dev.ConsoleRenderer())
@@ -46,7 +46,7 @@ def setup_sentry():
     if settings.SENTRY_DSN:
         sentry_sdk.init(
             dsn=settings.SENTRY_DSN,
-            environment=settings.ENVIRONMENT,
+            environment=settings.environment,
             traces_sample_rate=1.0,
             profiles_sample_rate=1.0,
             integrations=[

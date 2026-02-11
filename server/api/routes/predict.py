@@ -45,9 +45,20 @@ async def train_model(
     """
     Trigger model training for a symbol in the background.
     """
-    symbol = validate_symbol(symbol)
-    background_tasks.add_task(run_training_task, symbol)
-    return {"status": "accepted", "message": f"Training started for {symbol}"}
+    try:
+        symbol = validate_symbol(symbol)
+        background_tasks.add_task(run_training_task, symbol)
+        return {"status": "accepted", "message": f"Training started for {symbol}"}
+    except ValueError as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e),
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to start training: {str(e)}",
+        )
 
 
 from fastapi import Request
